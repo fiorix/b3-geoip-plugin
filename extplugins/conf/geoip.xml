@@ -1,0 +1,30 @@
+<configuration plugin="geoip">
+    <settings name="commands">
+        <!-- minimum level for using the !geoip command -->
+        <set name="geoip">20</set>
+    </settings>
+
+    <settings name="settings">
+        <!-- show geoip information on connection -->
+        <set name="show_on_connect">1</set>
+
+        <!-- show geoip information using the following format.
+             possible values are: country, region, city
+             region is usually the state or province. -->
+        <set name="format">country,region,city</set>
+    </settings>
+
+    <settings name="messages">
+        <set name="result">^2%s connecting from ^2%s</set>
+        <set name="invalid">Invalid client name or ID: ^2%s</set>
+        <set name="notfound">^2Could not find GeoIP information for ^2%s</set>
+        <set name="help">use: !geoip client</set>
+
+        <!-- Brazilian Portuguese
+        <set name="result">^2%s conectando de ^2%s</set>
+        <set name="invalid">Nome ou ID invalido: ^2%s</set>
+        <set name="notfound">^2Nao foi possivel localizar ^2%s</set>
+        <set name="help">use: !geoip cliente</set>
+        -->
+    </settings>
+</configuration>
