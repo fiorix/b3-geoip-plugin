@@ -13,6 +13,8 @@ and show automatic GeoIP messages on connection. The format of the GeoIP message
 and the message itself is customizable.
 See the `sample configuration file <http://github.com/fiorix/b3-geoip-plugin/tree/master/extplugins/conf/geoip.xml>`_ for details.
 
+It has been only tested with `Urban Terror <http://www.urbanterror.info/>`_, but it might work with other games.
+
 Installation
 ============
 
@@ -26,6 +28,6 @@ Credits
 =======
 Thanks to (in no particular order):
 
-- `URT TV Clan <http://www.tvclan.com.br>`
+- `TV Clan <http://www.tvclan.com.br>`
 
   - For supporting development and testing.
