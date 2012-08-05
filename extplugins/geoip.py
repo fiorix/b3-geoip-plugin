@@ -12,8 +12,11 @@ import unicodedata
 import b3.plugin
 import b3.events
 
+
 def normalize(s):
-    return ''.join((c for c in unicodedata.normalize('NFD', s) if unicodedata.category(c) != 'Mn'))
+    return ''.join((c for c in unicodedata.normalize('NFD', s)
+                    if unicodedata.category(c) != 'Mn'))
+
 
 class GeoipPlugin(b3.plugin.Plugin):
     _adminPlugin = None
@@ -38,9 +41,11 @@ class GeoipPlugin(b3.plugin.Plugin):
             self._messages["invalid"] = "Invalid client name or ID: ^2%s"
 
         try:
-            self._messages["notfound"] = self.config.get("messages", "notfound")
+            self._messages["notfound"] = self.config.get("messages",
+                                                         "notfound")
         except:
-            self._messages["notfound"] = "^2Could not find GeoIP information for ^2%s"
+            self._messages["notfound"] = "^2Could not find GeoIP " \
+                                         "information for ^2%s"
 
         try:
             self._messages["help"] = self.config.get("messages", "help")
@@ -55,7 +60,8 @@ class GeoipPlugin(b3.plugin.Plugin):
             level = 20
 
         try:
-            show_on_connect = bool(self.config.getint("settings", "show_on_connect"))
+            show_on_connect = bool(self.config.getint("settings",
+                                                      "show_on_connect"))
         except:
             show_on_connect = False
 
@@ -71,14 +77,16 @@ class GeoipPlugin(b3.plugin.Plugin):
         if show_on_connect:
             self.registerEvent(b3.events.EVT_CLIENT_AUTH)
 
-        self._adminPlugin.registerCommand(self, "geoip", level, self.geoip_lookup, "gl")
+        self._adminPlugin.registerCommand(self, "geoip", level,
+                                          self.geoip_lookup, "gl")
 
     def onEvent(self, event):
         if event.type == b3.events.EVT_CLIENT_AUTH:
             self.geoip_lookup(-1, event.data)
 
     def geoip_lookup(self, data, client, cmd=None):
-        self.debug("geoip data=(%s) client=(%s), cmd=(%s)" % (data, client, cmd))
+        self.debug("geoip data=(%s) client=(%s), cmd=(%s)" %
+                   (data, client, cmd))
         if data == -1:
             return self.reply(self.console.write, client.ip, client.name)
         elif data:
@@ -92,7 +100,8 @@ class GeoipPlugin(b3.plugin.Plugin):
                     try:
                         say(self._messages["invalid"] % data)
                     except Exception, e:
-                        self.error("Could not use translated string ``invalid``: %s" % e)
+                        self.error("Could not use translated string "
+                                   "``invalid``: %s" % e)
 
         cmd.sayLoudOrPM(client, self._messages["help"])
 
@@ -103,16 +112,18 @@ class GeoipPlugin(b3.plugin.Plugin):
             try:
                 say(self._messages["notfound"] % nick)
             except Exception, e:
-                self.error("Could not use translated string ``notfound``: %s" % e)
+                self.error("Could not use translated string "
+                           "``notfound``: %s" % e)
         else:
             try:
                 msg = self._messages["result"] % (nick, location)
                 say(msg.encode("ascii", "ignore"))
             except Exception, e:
-                self.error("Could not use translated string ``result``: %s" % e)
+                self.error("Could not use translated string "
+                           "``result``: %s" % e)
 
     def geoip_query(self, ip):
-        fd = urllib.urlopen("http://freegeoip.net/csv/"+ip)
+        fd = urllib.urlopen("http://freegeoip.net/csv/" + ip)
         data = fd.read()
         fd.close()
 
@@ -121,13 +132,14 @@ class GeoipPlugin(b3.plugin.Plugin):
         info = []
         for fmt in self._format:
             if fmt == "country" and data[2]:
-                info.append(data[2])
+                info.append(data[2].strip())
             elif fmt == "region" and data[4]:
-                info.append(data[4])
+                info.append(data[4].strip())
             elif fmt == "city" and data[5]:
-                info.append(data[5])
+                info.append(data[5].strip())
 
         return ", ".join(info)
+
 
 if __name__ == "__main__":
     from b3.fake import fakeConsole
@@ -135,4 +147,5 @@ if __name__ == "__main__":
     p = GeoipPlugin(fakeConsole, "./conf/geoip.xml")
     p.onStartup()
 
-    while True: pass
+    while True:
+        pass
