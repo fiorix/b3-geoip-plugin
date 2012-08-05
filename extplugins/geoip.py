@@ -133,13 +133,13 @@ class GeoipPlugin(b3.plugin.Plugin):
         info = []
         for fmt in self._format:
             if fmt == "country" and "country_name" in data:
-                info.append(normalize(data["country_name"]))
+                info.append(normalize(data["country_name"]).strip())
             elif fmt == "region" and "region_name" in data:
-                info.append(normalize(data["region_name"]))
+                info.append(normalize(data["region_name"]).strip())
             elif fmt == "city" and "city" in data:
-                info.append(normalize(data["city"]))
+                info.append(normalize(data["city"]).strip())
 
-        return ", ".join(info)
+        return ", ".join([x for x in info if x])
 
 
 if __name__ == "__main__":
