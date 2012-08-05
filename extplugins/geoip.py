@@ -2,12 +2,13 @@
 # coding: utf-8
 # (c) 2010 /dev/null
 
-__version__ = "0.3"
+__version__ = "0.4"
 __author__ = "/dev/null"
 
-import urllib
 import functools
+import json
 import unicodedata
+import urllib
 
 import b3.plugin
 import b3.events
@@ -123,20 +124,20 @@ class GeoipPlugin(b3.plugin.Plugin):
                            "``result``: %s" % e)
 
     def geoip_query(self, ip):
-        fd = urllib.urlopen("http://freegeoip.net/csv/" + ip)
+        fd = urllib.urlopen("http://freegeoip.net/json/%s" % ip)
         data = fd.read()
         fd.close()
 
-        data = normalize(data.decode("utf-8")).split(",")
+        data = json.loads(data)
         self.debug("querying %s: %s" % (ip, data))
         info = []
         for fmt in self._format:
-            if fmt == "country" and data[2]:
-                info.append(data[2].strip())
-            elif fmt == "region" and data[4]:
-                info.append(data[4].strip())
-            elif fmt == "city" and data[5]:
-                info.append(data[5].strip())
+            if fmt == "country" and "country_name" in data:
+                info.append(normalize(data["country_name"]))
+            elif fmt == "region" and "region_name" in data:
+                info.append(normalize(data["region_name"]))
+            elif fmt == "city" and "city" in data:
+                info.append(normalize(data["city"]))
 
         return ", ".join(info)
 
